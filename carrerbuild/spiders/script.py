@@ -11,6 +11,7 @@ class DmozItem(scrapy.Item):
 	Description = scrapy.Field()
 	Logo = scrapy.Field()
 	Merges = scrapy.Field()
+	ApplyLink = scrapy.Field()
 class DmozSpider(scrapy.Spider):
 	name = "dmoz_carrer"
 	page_numbers = 2
@@ -50,7 +51,8 @@ class DmozSpider(scrapy.Spider):
 		item['Title'] = title
 		item["Logo"] = logo
 		item['Skill'] = sk
-		item['Merges'] = self.BASE_URL + cs[1]
+		item['Merges'] = "https://www.careerbuilder.com" + cs[1]
+		item['ApplyLink'] = response.url
 		aa = response.css('div.col p::text').extract()
 		text_list=""
 		for text in aa:
