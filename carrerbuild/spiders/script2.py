@@ -38,5 +38,5 @@ class DmozSpider(scrapy.Spider):
 		co_indu = response.css('div.data-details span::text').extract()
 		item['Merges'] = response.url
 		item['CoIndustry'] = co_indu[1]
-		item['CoWebsite'] = llink[0]
+		item['CoWebsite'] = llink[1]
 		return item
