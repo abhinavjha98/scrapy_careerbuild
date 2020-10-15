@@ -10,7 +10,7 @@ class DmozItem(scrapy.Item):
 	Title = scrapy.Field()
 	Description = scrapy.Field()
 	Logo = scrapy.Field()
-	Merges = scrapy.Field()
+	# Merges = scrapy.Field()
 	ApplyLink = scrapy.Field()
 class DmozSpider(scrapy.Spider):
 	name = "dmoz_carrer"
@@ -39,10 +39,11 @@ class DmozSpider(scrapy.Spider):
 		# ab_url = self.BASE_URL + cs[1]
 		# yield scrapy.Request(ab_url, callback=self.parse_att)
 		title = response.css('h2.h3::text').extract()
-		location = response.css('div.data-details span::text').extract()
+		location = response.css('div.data-display-header_content div.data-details span::text').extract()
 		sk=""
 		item = DmozItem()
 		skill = response.css('div.check-bubble::text').extract()
+		location[1] = location[1].replace('Work From Home,','')
 		for i in range(len(skill)):
 			sk += "#"+skill[i]
 		item['Company'] = location[0]
@@ -51,9 +52,18 @@ class DmozSpider(scrapy.Spider):
 		item['Title'] = title
 		item["Logo"] = logo
 		item['Skill'] = sk
-		item['Merges'] = "https://www.careerbuilder.com" + cs[1]
+		# item['Merges'] = "https://www.careerbuilder.com" + cs[1]
 		item['ApplyLink'] = response.url
-		aa = response.css('div.col p::text').extract()
+		aa = response.css('div.col-2 div.col-mobile-full p::text').extract()
+		aa +=  response.css('div.seperate-bottom div.col ul strong::text').extract()
+		aa += response.css('div.col-2 div.col-mobile-full::text').extract() 
+		aa +=  response.css('div.seperate-bottom div.col ul li::text').extract()
+		# if aa[0]:
+		# 	aa = response.css('div.col-2 div.col-mobile-full p::text').extract()	
+		# 	aa +=  response.css('div.seperate-bottom div.col ul strong::text').extract()
+		# else:
+		# 	aa = response.css('div.col-2 div.col-mobile-full::text').extract() 
+		# 	aa +=  response.css('div.seperate-bottom div.col ul strong::text').extract()
 		text_list=""
 		for text in aa:
 			text = text.rstrip("\n")
