@@ -54,10 +54,18 @@ class DmozSpider(scrapy.Spider):
 		item['Skill'] = sk
 		# item['Merges'] = "https://www.careerbuilder.com" + cs[1]
 		item['ApplyLink'] = response.url
-		aa = response.css('div.col-2 div.col-mobile-full p::text').extract()
-		aa +=  response.css('div.seperate-bottom div.col ul strong::text').extract()
-		aa += response.css('div.col-2 div.col-mobile-full::text').extract() 
-		aa +=  response.css('div.seperate-bottom div.col ul li::text').extract()
+		aa = response.xpath("//div[@class='col-2']/descendant::text()").extract()
+		# words = ["Apply to this job.\n","Think you're the perfect candidate?Apply Now\n",""]
+		aa[0] = ""
+		aa[1] = ""
+		aa[2] = ""
+		aa[3] = ""
+		aa[4] = ""
+		aa[5] = ""
+		aa[6] = ""
+		aa[7] = ""
+		aa[8] = ""
+
 		# if aa[0]:
 		# 	aa = response.css('div.col-2 div.col-mobile-full p::text').extract()	
 		# 	aa +=  response.css('div.seperate-bottom div.col ul strong::text').extract()
@@ -68,6 +76,14 @@ class DmozSpider(scrapy.Spider):
 		for text in aa:
 			text = text.rstrip("\n")
 			text_list=text_list+text
+		text_list = text_list.replace("    googletag.cmd.push(function() {",'')
+		text_list = text_list.replace("googletag.display('div-gpt-ad-1600936971805-0'); });\n",'')
+		text_list = text_list.replace("Apply to this job.\nThink you\'re the perfect candidate?Apply Now\n",'')
+		text_list = text_list.replace("     $('.external-apply-email-saved').on('click', function",'')
+		text_list = text_list.replace("'(event) {\n",'')
+		text_list = text_list.replace("    window.ExternalApply = window.open('/interstitial'",'')
+		text_list = text_list.replace("'ExternalApply-j3w31m6mxnzywkwcz8d');\n",'')
+		text_list = text_list.replace("  "," ")
 		item["Description"] = text_list
 		return item
 	# def parse_att(self, response):
